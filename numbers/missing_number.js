@@ -48,13 +48,13 @@ if (translation.match(pat) != null) {
 }
 
 
-var extraNumbersSource = [];
+var missingNumbersSource = [];
 
-extraNumbersSource = differenceBetweenTwoArrays(sourceMatchArray, translationMatchArray);
+missingNumbersSource = differenceBetweenTwoArrays(sourceMatchArray, translationMatchArray);
 
-if (extraNumbersSource.length != 0) {
+if (missingNumbersSource.length != 0) {
 
-    result.message = 'The translate text have some missing numbers. Missing numbers in translate: ' + extraNumbersSource;
+    result.message = 'The translate text have some missing numbers. Missing numbers in translate: ' + missingNumbersSource;
     result.fixes = []
     return result;
 
