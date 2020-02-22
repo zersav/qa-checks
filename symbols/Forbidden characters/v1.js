@@ -1,15 +1,17 @@
+var characters = ['!', '@', '#', '$', '%']; //Your forbidden characters
+
 var result = {
     success: false
 };
 
-var characters = ['!', '@', '#', '$', '%']; //Our characters
 if (crowdin.contentType == "application/vnd.crowdin.text+plural") {
     var obj = JSON.parse(crowdin.source);
-    source = obj[crowdin.context.pluralForm].replace(/(?:\r\n|\r)/g, '\n');
+    source = obj[crowdin.context.pluralForm];
 } else {
-    source = crowdin.source.replace(/(?:\r\n|\r)/g, '\n');
+    source = crowdin.source;
 }
-translation = crowdin.translation.replace(/(?:\r\n|\r)/g, '\n');
+
+translation = crowdin.translation;
 var regex = new RegExp('[' + characters.join("") + ']', 'g');
 sourceMatch = source.match(regex);
 translationMatch = translation.match(regex);

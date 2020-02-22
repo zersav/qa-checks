@@ -1,14 +1,16 @@
+var characters = ['+', '±', '–', '=', '≠', '≈', '≅', '≡', '*', '×', '÷', '/', '<', '>', '≤', '≥', '∑', '∏', '∫', '∩', '∀', '∃', '∅', '∂', '∇', '⊂', '⊃', '∪', '∈', '∉', '∋', '∠', '∴', '⊕', '⊗', '⊥', '√', '∝', '∞']; //Our characters
+
 var result = {
     success: false
 };
 if (crowdin.contentType == "application/vnd.crowdin.text+plural") {
     var obj = JSON.parse(crowdin.source);
-    source = obj[crowdin.context.pluralForm].replace(/(?:\r\n|\r)/g, '\n');
+    source = obj[crowdin.context.pluralForm];
 } else {
-    source = crowdin.source.replace(/(?:\r\n|\r)/g, '\n');
+    source = crowdin.source;
 }
-var characters = ['+', '±', '–', '=', '≠', '≈', '≅', '≡', '*', '×', '÷', '/', '<', '>', '≤', '≥', '∑', '∏', '∫', '∩', '∀', '∃', '∅', '∂', '∇', '⊂', '⊃', '∪', '∈', '∉', '∋', '∠', '∴', '⊕', '⊗', '⊥', '√', '∝', '∞']; //Our characters
-translation = crowdin.translation.replace(/(?:\r\n|\r)/g, '\n');
+
+translation = crowdin.translation;
 var regex = new RegExp('[' + characters.join("") + ']', 'g');
 sourceMatch = source.match(regex);
 translationMatch = translation.match(regex);
@@ -40,7 +42,7 @@ if (sourceMatch != null || translationMatch != null) {
     var sourceProps = [];
     var translationProps = [];
     var mergedProps = [];
-  	var solution = [];
+    var solution = [];
     if (sourceMatch != null && translationMatch != null) {
         for (var i = 0; i < sourceMatch.length; ++i) {
             var a = sourceMatch[i];
@@ -85,7 +87,7 @@ if (sourceMatch != null || translationMatch != null) {
         }
     }
     var messageArray = [];
-  	var replacementArray = [];
+    var replacementArray = [];
     for (var u = 0; u < mergedProps.length; u++) {
         if (ArrayContains(sourceProps, mergedProps[u]) && ArrayContains(translationProps, mergedProps[u])) { // Both contain symbol
             if (sourceResult[mergedProps[u]] == translationResult[mergedProps[u]]) {
@@ -97,22 +99,22 @@ if (sourceMatch != null || translationMatch != null) {
             messageArray.push('translation dont contain \'' + mergedProps[u] + '\', when source contain ' + sourceResult[mergedProps[u]] + ' time(s)');
         } else if (!ArrayContains(sourceProps, mergedProps[u]) && ArrayContains(translationProps, mergedProps[u])) {
             messageArray.push('source string dont contain \'' + mergedProps[u] + '\'');
-          	replacementArray.push(mergedProps[u]);
+            replacementArray.push(mergedProps[u]);
         }
     }
-  	if (replacementArray != null){
-      var tempIndex;
-      var repRegex = new RegExp('[' + replacementArray.join("") + ']', 'g');
-      for (var i = 0; i<replacementArray.length; i++){
-        for (var j = 0; j<translationResult[replacementArray[i]]; j++){
-          tempIndex = repRegex.exec(translation).index;
-          solution.push({
-          from_pos: tempIndex,
-          to_pos: tempIndex + 1,
-          replacement: ''
-        });
+    if (replacementArray != null) {
+        var tempIndex;
+        var repRegex = new RegExp('[' + replacementArray.join("") + ']', 'g');
+        for (var i = 0; i < replacementArray.length; i++) {
+            for (var j = 0; j < translationResult[replacementArray[i]]; j++) {
+                tempIndex = repRegex.exec(translation).index;
+                solution.push({
+                    from_pos: tempIndex,
+                    to_pos: tempIndex + 1,
+                    replacement: ''
+                });
+            }
         }
-      }
     }
     result.fixes = solution;
     result.message = 'Next issue(s) found: ' + messageArray.join('; ') + '.';
