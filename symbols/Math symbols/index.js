@@ -113,8 +113,10 @@ if (sourceMatch != null || translationMatch != null) {
       }
     }
   }
-  result.fixes = solution
-  if (missingArray !== 0 && extraArray !== 0) {
+  if (!(Array.isArray(extraArray) && extraArray.length) && !(Array.isArray(missingArray) && missingArray.length)) {
+    result.success = true
+  } else if (Array.isArray(extraArray) && extraArray.length && Array.isArray(missingArray) && missingArray.length) {
+    result.fixes = solution
     result.message = 'Math symbols. Missing in translation: '
     if (missingArray.length < 6) {
       result.message += missingArray.join(', ') + '. '
@@ -127,14 +129,16 @@ if (sourceMatch != null || translationMatch != null) {
     } else {
       result.message += extraArray.slice(0, 5).join(', ') + ' and others.'
     }
-  } else if (missingArray !== 0 && extraArray === 0) {
+  } else if (Array.isArray(missingArray) && missingArray.length && !(Array.isArray(extraArray) && extraArray.length)) {
+    result.fixes = solution
     result.message = 'Math symbols. Missing in translation: '
     if (missingArray.length < 6) {
       result.message += missingArray.join(', ') + '.'
     } else {
       result.message += missingArray.slice(0, 5).join(', ') + ' and others.'
     }
-  } else if (missingArray === 0 && extraArray !== 0) {
+  } else if (!(Array.isArray(missingArray) && missingArray.length) && Array.isArray(extraArray) && extraArray.length) {
+    result.fixes = solution
     result.message = 'Math symbols. Extra in translation: '
     if (extraArray.length < 6) {
       result.message += extraArray.join(', ') + '.'
@@ -142,7 +146,8 @@ if (sourceMatch != null || translationMatch != null) {
       result.message += extraArray.slice(0, 5).join(', ') + ' and others.'
     }
   }
-} else {
+} 
+else {
   result.success = true
 }
 

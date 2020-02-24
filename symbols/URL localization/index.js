@@ -1,7 +1,7 @@
 // Config section
 
 var yourTargetDomainUrl
-var yourMainDomainUrl = 'crowdin.com' // Set your main domain URL in next format 'example.com' or 'example.com.ua';
+var yourMainDomainUrl = 'crowdin.com' // Set your main domain URL in next format 'example.com', 'www.example.com' or 'example.com.ua'
 
 // Configure next function with your target languages and related domains in the following form:
 
@@ -45,28 +45,32 @@ if (crowdin.contentType === 'application/vnd.crowdin.text+plural') {
 
 var translation = crowdin.translation
 var patternForMainDomain, patternForTargetDomain
-if (yourMainDomainUrl.split('.').length === 2) { // Formating regex depending on which domains you specified ('example.com' or 'example.com.ua')
-  patternForMainDomain = new RegExp('(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?' + yourMainDomainUrl.split('.')[0] + '\.' + yourMainDomainUrl.split('.')[1], 'g')
-} else if (yourMainDomainUrl.split('.').length === 3) {
-  patternForMainDomain = new RegExp('(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?' + yourMainDomainUrl.split('.')[0] + '\.' + yourMainDomainUrl.split('.')[1] + '\.' + yourMainDomainUrl.split('.')[2], 'g')
-}
-if (yourTargetDomainUrl.split('.').length === 2) {
-  patternForTargetDomain = new RegExp('(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?' + yourTargetDomainUrl.split('.')[0] + '\.' + yourTargetDomainUrl.split('.')[1], 'g')
-} else if (yourTargetDomainUrl.split('.').length === 3) {
-  patternForTargetDomain = new RegExp('(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?' + yourTargetDomainUrl.split('.')[0] + '\.' + yourTargetDomainUrl.split('.')[1] + '\.' + yourTargetDomainUrl.split('.')[2], 'g')
-}
+
+patternForMainDomain = new RegExp('((https?):\/\/|(https?):\/\/www.)' + yourMainDomainUrl, 'g')
+patternForTargetDomain = new RegExp('((https?):\/\/|(https?):\/\/www.)' + yourTargetDomainUrl, 'g')
 
 var sourceMatch = source.match(patternForMainDomain)
 var translationMatch = translation.match(patternForTargetDomain)
 
-if (sourceMatch.length !== translationMatch.length) {
-  result.fixes = []
+if (sourceMatch == null || translationMatch == null) {
+  if (sourceMatch == null && translationMatch == null) {
+    result.success = true
+  } else if (sourceMatch == null && translationMatch != null) {
+    result.message = 'URL localization. Found extra localizated URL in translation.'
+    result.fixes = []
+  } else if (sourceMatch != null && translationMatch == null) {
+    result.message = 'URL localization. Found missed localizated URL in translation.'
+    result.fixes = []
+  }
+} else if (sourceMatch.length !== translationMatch.length) {
   if (sourceMatch.length <= translationMatch.length) {
     result.message = 'URL localization. Found extra localizated URL in translation.'
+    result.fixes = []
   } else if (sourceMatch.length >= translationMatch.length) {
     result.message = 'URL localization. Found missed localizated URL in translation.'
+    result.fixes = []
   }
-} else {
+} else if (sourceMatch.length === translationMatch.length) {
   result.success = true
 }
 
