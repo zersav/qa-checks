@@ -1,4 +1,4 @@
-var numberInWordPattern = new RegExp ('[\\p{L}]{1,1}(\\d{1,})[\\p{L}]{1,1}|[\\p{L}]{0,1}(\\d{1,})[\\p{L}]{1,1}|[\\p{L}]{1,1}(\\d{1,})[\\p{L}]{0,1}','gu');
+var phoneNumberPattern = new RegExp ('([+]{1,1}[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.0-9]+)','g');
 
 var result = {
     success: false
@@ -33,8 +33,8 @@ function differenceBetweenTwoArrays(decreasingArray, deductionArray) {
 
 var sourceMatchArray = [];
 
-if (source.match(numberInWordPattern) != null) {
-   while (matchIterator = numberInWordPattern.exec(source)) {
+if (source.match(phoneNumberPattern) != null) {
+   while (matchIterator = phoneNumberPattern.exec(source)) {
     for(i =1;i<matchIterator.length;i++)
     {
       if(matchIterator[i]!=null)
@@ -49,8 +49,8 @@ if (source.match(numberInWordPattern) != null) {
 
 var translationMatchArray = [];
 
-if (translation.match(numberInWordPattern) != null) {
-   while (matchIterator = numberInWordPattern.exec(translation)) {
+if (translation.match(phoneNumberPattern) != null) {
+   while (matchIterator = phoneNumberPattern.exec(translation)) {
     for(i =1;i<matchIterator.length;i++)
     {
       if(matchIterator[i]!=null)
@@ -70,7 +70,7 @@ missingNumbersSource = differenceBetweenTwoArrays(sourceMatchArray, translationM
 
 if (missingNumbersSource.length != 0) {
 
-    result.message = 'The translate text have some missing numbers. Missing numbers in translate: ' + missingNumbersSource;
+    result.message = 'The translate text have some missing phone numbers. Missing phone numbers in translate: ' + missingNumbersSource;
     result.fixes = []
     return result;
 

@@ -1,4 +1,4 @@
-var numberInWordPattern = new RegExp ('[\\p{L}]{1,1}(\\d{1,})[\\p{L}]{1,1}|[\\p{L}]{0,1}(\\d{1,})[\\p{L}]{1,1}|[\\p{L}]{1,1}(\\d{1,})[\\p{L}]{0,1}','gu');
+var phoneNumberPattern = new RegExp ('([+]{1,1}[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.0-9]+)','g');
 
 
 var result = {
@@ -13,23 +13,27 @@ if (crowdin.contentType == "application/vnd.crowdin.text+plural") {
 }
 translation = crowdin.translation.replace(/(?:\r\n|\r)/g, '\n');
 
-if (source.match(numberInWordPattern) != null) {
-    sourceMatchArray = source.match(numberInWordPattern).slice(0);
-} else {
-    sourceMatchArray = [];
+var sourceMatchArray = [];
+
+if (source.match(phoneNumberPattern) != null) {    
+    while (matchIterator = phoneNumberPattern.exec(source)) {
+        sourceMatchArray.push(matchIterator[1]);
+    }
 }
 
-if (translation.match(numberInWordPattern) != null) {
-    translationMatchArray = translation.match(numberInWordPattern).slice(0);
-} else {
-    translationMatchArray = [];
+var translationMatchArray = [];
+
+if (translation.match(phoneNumberPattern) != null) {
+    while (matchIterator = phoneNumberPattern.exec(translation)) {
+        translationMatchArray.push(matchIterator[1]);
+    }
 }
 
 sourceInsertedWordCount = null !== sourceMatchArray ? sourceMatchArray.length : 0;
 translationInsertedWordCount = null !== translationMatchArray ? translationMatchArray.length : 0;
 
 if (sourceInsertedWordCount != translationInsertedWordCount) {
-    result.message = 'Count of numbers in translation and source are different: ' + sourceInsertedWordCount + ' in source, ' + translationInsertedWordCount + ' in translation.';
+    result.message = 'Count of phone numbers in translation and source are different: ' + sourceInsertedWordCount + ' in source, ' + translationInsertedWordCount + ' in translation.';
     result.fixes = []
     return result;
 } else {
