@@ -30,7 +30,7 @@ Array.prototype.includes = function (element) {
 }
 // monkey patch
 
-patern = /(?<=\s|^)(#([\da-f]{3}){1,2}|(rgb|hsl)a\((\d{1,3}%?,\s?){3}(1|0?\.\d+)\)|(rgb|hsl)\(\d{1,3}%?(,\s?\d{1,3}%?){2}\))(?=\s|$)/g
+patern = /(#([0-9a-fA-F]{3}){1,2}|(rgb|hsl)\((\[0-9]{1,3}%?,\s?){3}(1|0?\.[0-9]+)\)|(rgb|hsl)\([0-9]{1,3}%?(,\s?[0-9]{1,3}%?){2}\))(?=\s|$)/g
 
 
 source = crowdin.source.match(patern) || []
@@ -59,7 +59,7 @@ if (sourceDiff.length == 0 && translationDiff == 0) {
     } else {
       result.message = 'Different color(s) in the tapes'
       result.message += 'Extra color(s): (' + translationDiff + ')'
-      result.message += 'Missing color(s): (' + sourceDiff + ')'
+      result.message += 'issing color(s): (' + sourceDiff + ')'
     }
   }
   

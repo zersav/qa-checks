@@ -50,7 +50,7 @@ if (sourceDiff.length == 0 && translationDiff == 0) {
         var temporary_variable = translation_text.indexOf(translationDiff[i])
         solution.push({
           from_pos: temporary_variable,
-          to_pos: temporary_variable.length,
+          to_pos: temporary_variable+translationDiff[i].length,
           replacement: ''
         })
       }
